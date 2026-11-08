@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>راهنمای Ryoku برای نیما</title>
+<style>
+/*@@CSS@@*/
+</style>
+</head>
+<body>
+<a class="sr" href="#content">پرش به محتوا</a>
+<header class="topbar">
+  <button class="tbtn icon" id="menuBtn" type="button" aria-label="فهرست">☰</button>
+  <div class="brand">راهنمای Ryoku <small>از نصب تا موس‌لس</small></div>
+  <div class="overall" title="پیشرفت کل"><div class="bar"><i id="overallBar"></i></div><span class="pct" id="overallPct">۰٪</span></div>
+  <button class="tbtn" id="searchBtn" type="button" title="جست‌وجو (/)">🔍 <span class="hide-sm">جست‌وجو</span></button>
+  <button class="tbtn" id="valsBtn" type="button" title="مقادیر من (v)">⚙️ <span class="hide-sm">مقادیر من</span></button>
+  <button class="tbtn icon" id="themeBtn" type="button" title="تغییر تم (t)">☀️</button>
+  <button class="tbtn icon" id="helpBtn" type="button" title="میان‌برها (?)">?</button>
+</header>
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="فهرست فصل‌ها">
+    <h2>فصل‌ها</h2>
+    <ol class="toc" id="toc"></ol>
+    <div class="side-actions">
+      <button class="tbtn" id="resetBtn" type="button">↺ صفر کردن پیشرفت</button>
+    </div>
+  </nav>
+  <div class="scrim" id="scrim"></div>
+  <main id="content" tabindex="-1"><noscript>این صفحه برای نمایش به جاوااسکریپت نیاز دارد. آن را در Firefox یا Chromium باز کن.</noscript></main>
+</div>
+
+<div class="overlay" id="searchOv" role="dialog" aria-label="جست‌وجو">
+  <div class="panel">
+    <button class="tbtn close" type="button">بستن (Esc)</button>
+    <h2>🔍 جست‌وجو در کل راهنما</h2>
+    <input id="searchInput" type="search" placeholder="مثلاً pacman، پروکسی، fstab…" autocomplete="off" spellcheck="false">
+    <p class="muted" style="font-size:.8rem;margin:.4em 0 0">↑/↓ یا Ctrl+j/k برای حرکت، Enter برای رفتن، Esc برای بستن.</p>
+    <ul id="searchResults"></ul>
+  </div>
+</div>
+
+<div class="overlay" id="valsOv" role="dialog" aria-label="مقادیر من">
+  <div class="panel">
+    <button class="tbtn close" type="button">بستن (Esc)</button>
+    <h2>⚙️ مقادیر من</h2>
+    <p class="muted" style="font-size:.88rem">هر چیزی که این‌جا بنویسی، فوراً در همهٔ دستورها جایگزین می‌شود (بخش‌های <span class="ph">زرد</span>). دکمهٔ «کپی» هم نسخهٔ پرشده را کپی می‌کند. مقادیر فقط در همین مرورگر ذخیره می‌شوند.</p>
+    <form class="vals" id="valsForm" onsubmit="return false"></form>
+    <p style="margin-top:14px"><button class="tbtn" id="valsReset" type="button">برگرداندن پیش‌فرض‌ها</button></p>
+  </div>
+</div>
+
+<div class="overlay" id="helpOv" role="dialog" aria-label="میان‌برهای صفحه">
+  <div class="panel">
+    <button class="tbtn close" type="button">بستن (Esc)</button>
+    <h2>⌨️ میان‌برهای این صفحه</h2>
+    <div class="tbl-wrap"><table class="keys-table">
+      <tr><td><kbd>j</kbd> / <kbd>k</kbd></td><td>مورد بعدی / قبلی (گام یا دستور)</td></tr>
+      <tr><td><kbd>J</kbd> / <kbd>K</kbd> یا <kbd>]</kbd> / <kbd>[</kbd></td><td>فصل بعدی / قبلی</td></tr>
+      <tr><td><kbd>/</kbd></td><td>جست‌وجو</td></tr>
+      <tr><td><kbd>y</kbd></td><td>کپی دستورِ انتخاب‌شده</td></tr>
+      <tr><td><kbd>x</kbd></td><td>تیک‌زدن یا برداشتن تیک گامِ انتخاب‌شده</td></tr>
+      <tr><td><kbd>v</kbd></td><td>پنل «مقادیر من»</td></tr>
+      <tr><td><kbd>t</kbd></td><td>تم روشن / تیره</td></tr>
+      <tr><td><kbd>g</kbd> <kbd>g</kbd> / <kbd>G</kbd></td><td>اول / آخر صفحه</td></tr>
+      <tr><td><kbd>?</kbd></td><td>همین راهنما</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>بستن پنجره‌ها</td></tr>
+      <tr><td><kbd>Tab</kbd></td><td>رفتن روی دکمه‌ها و واژه‌های واژه‌نامه (توضیح‌شان باز می‌شود)</td></tr>
+    </table></div>
+    <p class="muted" style="font-size:.85rem">این کلیدها با چیدمان فارسی هم کار می‌کنند، چون صفحه جای فیزیکی کلید را می‌خواند.</p>
+  </div>
+</div>
+
+<div id="tip" role="tooltip"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+/*@@CONTENT@@*/
+</script>
+<script>
+/*@@ENGINE@@*/
+</script>
+</body>
+</html>
