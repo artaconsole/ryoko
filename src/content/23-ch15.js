@@ -6,10 +6,10 @@
     what: "همهٔ اصطلاح‌های این راهنما با توضیح ساده، و هفت برگهٔ تقلب: kitty، fish، Yazi، کامپوزیتور، pacman/yay، پروکسی و SSH.",
     why: "برگهٔ چاپی کنار مانیتور در دو هفتهٔ اول از هر چیزی مفیدتر است.",
     time: "مرجع",
-    need: "پرینتر (اختیاری). دکمهٔ زیر فقط همین فصل را چاپ می‌کند.",
+    need: "پرینتر (اختیاری). در فایل آفلاین، دکمهٔ زیر فقط همین فصل را چاپ می‌کند.",
     steps: [
       { t: "چاپ", faq: true, b: [
-        RAW(`<p><button class="tbtn no-print" type="button" onclick="document.body.classList.add('print-cheats');window.print();setTimeout(function(){document.body.classList.remove('print-cheats')},800)">🖨️ چاپ فقط برگه‌های تقلب</button> <span class="muted">(یا ` + K("Ctrl+P") + ` برای چاپ کل راهنما. در پنجرهٔ چاپ «Save to PDF» هم هست.)</span></p>`)
+        RAW(`<p><button class="tbtn no-print file-only" type="button" onclick="document.body.classList.add('print-cheats');window.print();setTimeout(function(){document.body.classList.remove('print-cheats')},800)">🖨️ چاپ فقط برگه‌های تقلب</button> <span class="muted">(یا ` + K("Ctrl+P") + ` برای چاپ کل راهنما. در پنجرهٔ چاپ «Save to PDF» هم هست.)</span></p>`)
       ]},
       { t: "واژه‌نامه", faq: true, b: [RAW(`<dl class="gloss" id="glossaryList"></dl>`)] },
       S("برگهٔ تقلب: کامپوزیتور Ryoku (Hyprland و niri)", [

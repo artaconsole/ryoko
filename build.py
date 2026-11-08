@@ -8,6 +8,8 @@ every src/content/*.js in name order, then src/engine.js.
 """
 import base64
 import pathlib
+import re
+import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent
 SRC = ROOT / "src"
@@ -34,3 +36,17 @@ out = (shell.replace("/*@@CSS@@*/", css)
             .replace("/*@@ENGINE@@*/", engine))
 (ROOT / "index.html").write_text(out, encoding="utf-8")
 print(f"index.html: {len(out.encode('utf-8')) / 1024:.0f} KiB from {len(parts)} content files")
+
+# --artifact PATH: the same page for claude.ai Artifacts, whose host adds its
+# own doctype/html/head/body, charset and viewport. noindex asks search
+# engines to skip it; the page then follows the viewer's light/dark theme.
+if "--artifact" in sys.argv:
+    dest = pathlib.Path(sys.argv[sys.argv.index("--artifact") + 1])
+    head = out.split("<head>", 1)[1].split("</head>", 1)[0]
+    body = out.split("<body>", 1)[1].rsplit("</body>", 1)[0]
+    head = re.sub(r'<meta (charset|name="viewport")[^>]*>\s*', "", head)
+    art = ('<meta name="robots" content="noindex, nofollow">\n'
+           '<script>window.__ARTIFACT=true;document.documentElement.dir="rtl";document.documentElement.lang="fa";</script>\n'
+           + head.strip() + "\n" + body.strip() + "\n")
+    dest.write_text(art, encoding="utf-8")
+    print(f"{dest}: {len(art.encode('utf-8')) / 1024:.0f} KiB (artifact)")

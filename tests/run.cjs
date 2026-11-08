@@ -206,7 +206,8 @@ const ok = (cond, msg) => { console.log((cond ? "PASS " : "FAIL ") + msg); if (!
   await page.screenshot({ path: path.join(SHOTS, "danger.png") });
 
   // reset progress
-  page.once("dialog", d => d.accept());
+  await page.click("#resetBtn");
+  ok(await page.$eval("#" + stepId, s => s.classList.contains("done")), "first reset click only asks for confirmation");
   await page.click("#resetBtn");
   ok(!(await page.$eval("#" + stepId, s => s.classList.contains("done"))), "reset clears progress");
 

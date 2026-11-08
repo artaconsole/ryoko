@@ -185,7 +185,11 @@
     const text = fillText(CODES[id]);
     copyText(text).then(ok => {
       window.__lastCopied = text;
-      toast(ok ? "کپی شد ✓" : "کپی نشد؛ متن را دستی انتخاب کن.");
+      if (!ok) { // select the command so Ctrl+C works by hand
+        const pre = b && b.parentElement && b.parentElement.querySelector("pre");
+        if (pre) { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+      }
+      toast(ok ? "کپی شد ✓" : "کپی نشد؛ متن انتخاب شد، Ctrl+C بزن.");
       if (b && ok) { b.classList.add("ok"); b.textContent = "کپی شد"; setTimeout(() => { b.classList.remove("ok"); b.textContent = "کپی"; }, 1300); }
     });
   }
@@ -228,17 +232,34 @@
     $("#overallPct").textContent = toFa(p) + "٪";
   }
   updateProgress();
-  $("#resetBtn").addEventListener("click", () => {
-    if (!confirm("همهٔ تیک‌های پیشرفت پاک شود؟")) return;
+  // two-step confirm inside the page (confirm() dialogs are blocked in the artifact viewer)
+  const resetBtn = $("#resetBtn"), resetLabel = resetBtn.textContent;
+  let resetArmed = 0;
+  resetBtn.addEventListener("click", () => {
+    if (!resetArmed) {
+      resetArmed = setTimeout(() => { resetArmed = 0; resetBtn.textContent = resetLabel; }, 4000);
+      resetBtn.textContent = "مطمئنی؟ دوباره بزن تا پاک شود";
+      return;
+    }
+    clearTimeout(resetArmed); resetArmed = 0; resetBtn.textContent = resetLabel;
     prog = {}; LS.set(K_PROG, prog);
     $$(".step:not(.faq)").forEach(s => { s.classList.remove("done"); const c = $(".chk", s); if (c) c.checked = false; });
     updateProgress(); toast("پیشرفت صفر شد.");
   });
 
   /* ---------- theme ---------- */
-  function setTheme(t) { document.documentElement.dataset.theme = t; LS.set(K_THEME, t); $("#themeBtn").textContent = t === "dark" ? "☀️" : "🌙"; }
-  setTheme(LS.get(K_THEME, "dark"));
-  $("#themeBtn").addEventListener("click", () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
+  // stored choice wins; otherwise the offline file defaults to dark and the published page follows the viewer's theme
+  const root = document.documentElement;
+  if (window.__ARTIFACT) root.classList.add("in-artifact");
+  const effTheme = () => root.dataset.theme || (window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+  const themeBtn = () => { $("#themeBtn").textContent = effTheme() === "dark" ? "☀️" : "🌙"; };
+  function setTheme(t) { root.dataset.theme = t; LS.set(K_THEME, t); themeBtn(); }
+  const storedTheme = LS.get(K_THEME, null);
+  if (storedTheme) root.dataset.theme = storedTheme;
+  else if (!root.dataset.theme && !window.__ARTIFACT) root.dataset.theme = "dark";
+  themeBtn();
+  if (window.matchMedia) matchMedia("(prefers-color-scheme: light)").addEventListener("change", themeBtn);
+  $("#themeBtn").addEventListener("click", () => setTheme(effTheme() === "dark" ? "light" : "dark"));
 
   /* ---------- overlays ---------- */
   function openOv(id) { closeAll(); const o = document.getElementById(id); o.classList.add("open"); const f = $("#searchInput", o) || $("input", o) || $("button", o); if (f) f.focus(); }
